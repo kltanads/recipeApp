@@ -43,7 +43,9 @@ class RecipeViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _recipes = await repository.getRecipes();
+      final recipes = await repository.getRecipes();
+
+      _recipes = recipes;
     } catch (e) {
       _errorMessage = 'Unable to load recipes';
       debugPrint('Load recipes error: $e');

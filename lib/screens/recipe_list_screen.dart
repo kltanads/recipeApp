@@ -41,7 +41,22 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 
           if (viewModel.errorMessage != null) {
             return Center(
-              child: Text(viewModel.errorMessage!),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.error_outline,
+                    size: 48,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(viewModel.errorMessage!),
+                  const SizedBox(height: 12),
+                  FilledButton(
+                    onPressed: viewModel.loadRecipes,
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
             );
           }
 
@@ -52,15 +67,20 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
                 child: FutureBuilder<List<RecipeType>>(
                   future: _typesFuture,
                   builder: (context, snapshot) {
+                    // Loading state
+                    if (snapshot.connectionState != ConnectionState.done) {
+                      return const LinearProgressIndicator();
+                    }
+
+                    // Error state
                     if (snapshot.hasError) {
                       return const Text(
                         'Failed to load recipe types',
                       );
                     }
 
-                    if (!snapshot.hasData) {
-                      return const LinearProgressIndicator();
-                    }
+                    // Success state
+                    final types = snapshot.data ?? [];
 
                     return DropdownButtonFormField<String>(
                       initialValue: viewModel.selectedTypeId,
@@ -73,7 +93,7 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
                           value: null,
                           child: Text('All Recipes'),
                         ),
-                        ...snapshot.data!.map(
+                        ...types.map(
                               (type) => DropdownMenuItem<String>(
                             value: type.id,
                             child: Text(type.name),
