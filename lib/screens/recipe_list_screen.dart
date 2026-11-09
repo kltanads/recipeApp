@@ -8,6 +8,7 @@ import '../viewmodels/recipe_viewmodel.dart';
 import 'recipe_detail_screen.dart';
 import 'recipe_form_screen.dart';
 import 'import_recipe_screen.dart';
+import '../viewmodels/auth_viewmodel.dart';
 
 class RecipeListScreen extends StatefulWidget {
   const RecipeListScreen({super.key});
@@ -43,6 +44,11 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
                 ),
               );
             },
+          ),
+          IconButton(
+            tooltip: 'Logout',
+            icon: const Icon(Icons.logout),
+            onPressed: _userLogout,
           ),
         ],
       ),
@@ -178,5 +184,48 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  Future<void> _userLogout() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Logout'),
+        content: const Text(
+          'Are you sure you want to logout?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () =>
+                Navigator.pop(dialogContext, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () =>
+                Navigator.pop(dialogContext, true),
+            child: const Text('Yes'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    try {
+      await context
+          .read<AuthViewModel>()
+          .logout();
+
+      if (!mounted) return;
+
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to logout'),
+        ),
+      );
+    }
   }
 }
