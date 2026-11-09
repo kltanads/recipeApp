@@ -37,60 +37,8 @@ class AppDatabase {
             steps TEXT NOT NULL
           )
         ''');
-
-        await _insertSampleRecipes(db);
       },
     );
-  }
-
-  Future<void> _insertSampleRecipes(Database db) async {
-    final samples = [
-      Recipe(
-        id: '1',
-        name: 'Pancakes',
-        typeId: '1',
-        ingredients: ['Flour', 'Milk', 'Eggs', 'Sugar'],
-        steps: [
-          'Mix the ingredients.',
-          'Heat a frying pan.',
-          'Pour the batter.',
-          'Cook until golden brown.',
-        ],
-      ),
-      Recipe(
-        id: '2',
-        name: 'Fried Rice',
-        typeId: '2',
-        ingredients: ['Rice', 'Egg', 'Garlic', 'Soy sauce'],
-        steps: [
-          'Heat oil in a wok.',
-          'Add garlic and egg.',
-          'Add rice and soy sauce.',
-          'Stir-fry until cooked.',
-        ],
-      ),
-      Recipe(
-        id: '3',
-        name: 'Chocolate Cake',
-        typeId: '4',
-        ingredients: [
-          'Flour',
-          'Cocoa powder',
-          'Eggs',
-          'Butter',
-        ],
-        steps: [
-          'Preheat the oven.',
-          'Mix all ingredients.',
-          'Pour into a baking pan.',
-          'Bake until cooked.',
-        ],
-      ),
-    ];
-
-    for (final recipe in samples) {
-      await db.insert('recipes', recipe.toMap());
-    }
   }
 
   Future<List<Recipe>> getRecipes() async {

@@ -7,6 +7,7 @@ import '../services/recipe_type_service.dart';
 import '../viewmodels/recipe_viewmodel.dart';
 import 'recipe_detail_screen.dart';
 import 'recipe_form_screen.dart';
+import 'import_recipe_screen.dart';
 
 class RecipeListScreen extends StatefulWidget {
   const RecipeListScreen({super.key});
@@ -30,6 +31,20 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Recipes'),
+        actions: [
+          IconButton(
+            tooltip: 'Import Recipes',
+            icon: const Icon(Icons.cloud_download_outlined),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const ImportRecipeScreen(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: Consumer<RecipeViewModel>(
         builder: (context, viewModel, child) {
